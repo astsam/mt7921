@@ -40,6 +40,7 @@ install: default
 		modules_install
 	@./scripts/check_depmod.sh
 	@/sbin/depmod -a
+	@./scripts/fw_install.sh
 
 .PHONY: uninstall
 uninstall:
