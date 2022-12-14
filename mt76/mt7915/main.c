@@ -1427,5 +1427,5 @@ const struct ieee80211_ops mt7915_ops = {
 #ifdef CONFIG_MAC80211_DEBUGFS
 	.sta_add_debugfs = mt7915_sta_add_debugfs,
 #endif
-	.set_radar_background = mt7915_set_radar_background,
+//	.set_radar_background = mt7915_set_radar_background,
 };

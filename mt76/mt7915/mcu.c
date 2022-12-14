@@ -371,11 +371,11 @@ mt7915_mcu_rx_radar_detected(struct mt7915_dev *dev, struct sk_buff *skb)
 	if ((r->band_idx && !dev->phy.band_idx) && dev->mt76.phy2)
 		mphy = dev->mt76.phy2;
 
-	if (r->band_idx == MT_RX_SEL2)
-		cfg80211_background_radar_event(mphy->hw->wiphy,
-						&dev->rdd2_chandef,
-						GFP_ATOMIC);
-	else
+//	if (r->band_idx == MT_RX_SEL2)
+//		cfg80211_background_radar_event(mphy->hw->wiphy,
+//						&dev->rdd2_chandef,
+//						GFP_ATOMIC);
+//	else
 		ieee80211_radar_detected(mphy->hw);
 	dev->hw_pattern++;
 }
@@ -1824,7 +1824,7 @@ mt7915_mcu_beacon_cntdwn(struct ieee80211_vif *vif, struct sk_buff *rskb,
 	info = (struct bss_info_bcn_cntdwn *)tlv;
 	info->cnt = skb->data[offs->cntdwn_counter_offs[0]];
 }
-
+# if 0
 static void
 mt7915_mcu_beacon_mbss(struct sk_buff *rskb, struct sk_buff *skb,
 		       struct ieee80211_vif *vif, struct bss_info_bcn *bcn,
@@ -1844,7 +1844,7 @@ mt7915_mcu_beacon_mbss(struct sk_buff *rskb, struct sk_buff *skb,
 	mbss = (struct bss_info_bcn_mbss *)tlv;
 	mbss->offset[0] = cpu_to_le16(offs->tim_offset);
 	mbss->bitmap = cpu_to_le32(1);
-
+	
 	for_each_element_id(elem, WLAN_EID_MULTIPLE_BSSID,
 			    &skb->data[offs->mbssid_off],
 			    skb->len - offs->mbssid_off) {
@@ -1879,6 +1879,7 @@ mt7915_mcu_beacon_mbss(struct sk_buff *rskb, struct sk_buff *skb,
 		}
 	}
 }
+#endif
 
 static void
 mt7915_mcu_beacon_cont(struct mt7915_dev *dev, struct ieee80211_vif *vif,
@@ -2040,7 +2041,7 @@ int mt7915_mcu_add_beacon(struct ieee80211_hw *hw,
 	mt7915_mcu_beacon_check_caps(phy, vif, skb);
 
 	mt7915_mcu_beacon_cntdwn(vif, rskb, skb, bcn, &offs);
-	mt7915_mcu_beacon_mbss(rskb, skb, vif, bcn, &offs);
+//	mt7915_mcu_beacon_mbss(rskb, skb, vif, bcn, &offs);
 	mt7915_mcu_beacon_cont(dev, vif, rskb, skb, bcn, &offs);
 	dev_kfree_skb(skb);
 
