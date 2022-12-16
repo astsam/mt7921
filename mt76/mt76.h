@@ -17,6 +17,7 @@
 #include "util.h"
 #include "testmode.h"
 
+/* Defined in 5.0.xx - 5.16.xx */
 #ifdef IEEE80211_HE_PHY_CAP9_NOMIMAL_PKT_PADDING_16US
 #define IEEE80211_HE_PHY_CAP9_NOMINAL_PKT_PADDING_0US			0x0
 #define IEEE80211_HE_PHY_CAP9_NOMINAL_PKT_PADDING_8US			0x1
@@ -25,6 +26,11 @@
 #define IEEE80211_HE_PHY_CAP9_NOMINAL_PKT_PADDING_MASK			0xc0
 #endif
 
+/* Undefined in 5.16.xx */
+#ifndef IEEE80211_MAX_AMPDU_BUF_HE
+#define IEEE80211_MAX_AMPDU_BUF_HE	0x100
+#define IEEE80211_MAX_AMPDU_BUF_EHT	0x400
+#endif
 
 #define MT_MCU_RING_SIZE	32
 #define MT_RX_BUF_SIZE		2048
