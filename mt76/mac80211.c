@@ -393,6 +393,26 @@ mt76_check_sband(struct mt76_phy *phy, struct mt76_sband *msband,
 	phy->hw->wiphy->bands[band] = NULL;
 }
 
+static void
+mt76_fix_up_regdb(struct wiphy *wiphy)
+{
+	enum nl80211_band band;
+	struct ieee80211_supported_band *sband;
+	int i;
+
+	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+		sband = wiphy->bands[band];
+
+		if (!sband)
+			continue;
+
+		for (i = 0; i < sband->n_channels; i++) {
+			struct ieee80211_channel *chan = &sband->channels[i];
+			chan->flags = 0;
+		}
+	}
+}
+
 static int
 mt76_phy_init(struct mt76_phy *phy, struct ieee80211_hw *hw)
 {
@@ -639,6 +659,7 @@ int mt76_register_device(struct mt76_dev *dev, bool vht,
 	if (ret)
 		return ret;
 
+	mt76_fix_up_regdb(phy->hw->wiphy);
 	WARN_ON(mt76_worker_setup(hw, &dev->tx_worker, NULL, "tx"));
 	sched_set_fifo_low(dev->tx_worker.task);
 
