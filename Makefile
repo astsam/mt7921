@@ -27,11 +27,11 @@ export KLIB KLIB_BUILD BACKPORT_DIR KMODDIR KMODPATH_ARG
 
 .PHONY: default
 default:
-	$(MAKE) -C $(KLIB)build M=$(BACKPORT_DIR)
+	$(MAKE) -C $(KLIB_BUILD) M=$(BACKPORT_DIR)
 	
 .PHONY: clean
 clean:
-	$(MAKE) -C $(KLIB)build M=$(BACKPORT_DIR) clean
+	$(MAKE) -C $(KLIB_BUILD) M=$(BACKPORT_DIR) clean
 	
 .PHONY: install
 install: default
