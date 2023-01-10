@@ -32,6 +32,12 @@ default:
 .PHONY: clean
 clean:
 	$(MAKE) -C $(KLIB_BUILD) M=$(BACKPORT_DIR) clean
+
+.PHONY: modules_install
+modules_install: default
+	@$(MAKE) -C $(KLIB_BUILD) M=$(BACKPORT_DIR)			\
+		INSTALL_MOD_DIR=$(KMODDIR) $(KMODPATH_ARG)		\
+		modules_install
 	
 .PHONY: install
 install: default
