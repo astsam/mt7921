@@ -19,6 +19,7 @@ KLIB_BUILD ?= $(KLIB)/build/
 KERNEL_CONFIG := $(KLIB_BUILD)/.config
 KERNEL_MAKEFILE := $(KLIB_BUILD)/Makefile
 CONFIG_MD5 := $(shell md5sum $(KERNEL_CONFIG) 2>/dev/null | sed 's/\s.*//')
+DEPMOD_VERSION ?=
 
 export KLIB KLIB_BUILD BACKPORT_DIR KMODDIR KMODPATH_ARG
 
@@ -45,7 +46,7 @@ install: default
 		INSTALL_MOD_DIR=$(KMODDIR) $(KMODPATH_ARG)		\
 		modules_install
 	@./scripts/check_depmod.sh
-	@/sbin/depmod -a
+	@/sbin/depmod -a -b $(KLIB) $(DEPMOD_VERSION)
 	@./scripts/fw_install.sh
 
 .PHONY: uninstall
