@@ -11,9 +11,13 @@ BACKPORT_DIR := $(shell pwd)
 KMODDIR ?= updates
 ifneq ($(origin KLIB), undefined)
 KMODPATH_ARG := "INSTALL_MOD_PATH=$(KLIB)"
+DEPMOD_BASE := $(KLIB)
+DEPMOD_BASE_OPT := -b $(KLIB)
 else
 KLIB := /lib/modules/$(shell uname -r)/
 KMODPATH_ARG :=
+DEPMOD_BASE :=
+DEPMOD_BASE_OPT :=
 endif
 KLIB_BUILD ?= $(KLIB)/build/
 KERNEL_CONFIG := $(KLIB_BUILD)/.config
@@ -46,8 +50,8 @@ install: default
 		INSTALL_MOD_DIR=$(KMODDIR) $(KMODPATH_ARG)		\
 		modules_install
 	@./scripts/check_depmod.sh
-	@/sbin/depmod -a -b $(KLIB) $(DEPMOD_VERSION)
-	@./scripts/fw_install.sh
+	@/sbin/depmod -a $(DEPMOD_BASE_OPT) $(DEPMOD_VERSION)
+	@./scripts/fw_install.sh $(DEPMOD_BASE)
 
 .PHONY: uninstall
 uninstall:
