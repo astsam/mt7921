@@ -1,4 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
+ifeq ($(VERSION)$(PATCHLEVEL), 510)
+CONFIG_MT76_CONNAC_LIB=m
+endif
+
 obj-$(CONFIG_MT76_CORE) += mt76.o
 obj-$(CONFIG_MT76_USB) += mt76-usb.o
 obj-$(CONFIG_MT76_SDIO) += mt76-sdio.o

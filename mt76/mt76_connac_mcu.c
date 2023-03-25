@@ -629,8 +629,13 @@ mt76_connac_mcu_sta_he_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
 	if (elem->mac_cap_info[3] & IEEE80211_HE_MAC_CAP3_OMI_CONTROL)
 		cap |= STA_REC_HE_CAP_OM;
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 13, 0)		
 	if (elem->mac_cap_info[4] & IEEE80211_HE_MAC_CAP4_AMSDU_IN_AMPDU)
 		cap |= STA_REC_HE_CAP_AMSDU_IN_AMPDU;
+#else
+	if (elem->mac_cap_info[4] & IEEE80211_HE_MAC_CAP4_AMDSU_IN_AMPDU)
+		cap |= STA_REC_HE_CAP_AMSDU_IN_AMPDU;
+#endif
 
 	if (elem->mac_cap_info[4] & IEEE80211_HE_MAC_CAP4_BQR)
 		cap |= STA_REC_HE_CAP_BQR;
@@ -2685,7 +2690,7 @@ int mt76_connac_mcu_bss_basic_tlv(struct sk_buff *skb,
 	case NL80211_IFTYPE_AP:
 		if (ieee80211_hw_check(phy->hw, SUPPORTS_MULTI_BSSID)) {
 			u8 bssid_id = vif->bss_conf.bssid_indicator;
-			struct wiphy *wiphy = phy->hw->wiphy;
+//			struct wiphy *wiphy = phy->hw->wiphy;
 
 //			if (bssid_id > ilog2(wiphy->mbssid_max_interfaces))
 //				return -EINVAL;

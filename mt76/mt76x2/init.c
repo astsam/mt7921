@@ -8,6 +8,7 @@
 #include "eeprom.h"
 #include "../mt76x02_phy.h"
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 int mt76x2_set_sar_specs(struct ieee80211_hw *hw,
 			 const struct cfg80211_sar_specs *sar)
 {
@@ -36,6 +37,7 @@ out:
 	return err;
 }
 EXPORT_SYMBOL_GPL(mt76x2_set_sar_specs);
+#endif
 
 static void
 mt76x2_set_wlan_state(struct mt76x02_dev *dev, bool enable)

@@ -13,6 +13,7 @@
 #define HE_PREP(f, m, v)	le16_encode_bits(le32_get_bits(v, MT_CRXV_HE_##m),\
 						 IEEE80211_RADIOTAP_HE_##f)
 
+
 static struct mt76_wcid *mt7921_rx_get_wcid(struct mt7921_dev *dev,
 					    u16 idx, bool unicast)
 {
@@ -1361,9 +1362,13 @@ mt7921_vif_connect_iter(void *priv, u8 *mac,
 {
 	struct mt7921_vif *mvif = (struct mt7921_vif *)vif->drv_priv;
 	struct mt7921_dev *dev = mvif->phy->dev;
-
+	
 	if (vif->type == NL80211_IFTYPE_STATION)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 		ieee80211_disconnect(vif, true);
+#else
+		ieee80211_connection_loss(vif);
+#endif
 
 	mt76_connac_mcu_uni_add_dev(&dev->mphy, vif, &mvif->sta.wcid, true);
 	mt7921_mcu_set_tx(dev, vif);

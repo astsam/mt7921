@@ -172,6 +172,7 @@ struct ieee80211_rate mt76_rates[] = {
 };
 EXPORT_SYMBOL_GPL(mt76_rates);
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 static const struct cfg80211_sar_freq_ranges mt76_sar_freq_ranges[] = {
 	{ .start_freq = 2402, .end_freq = 2494, },
 	{ .start_freq = 5150, .end_freq = 5350, },
@@ -185,6 +186,7 @@ static const struct cfg80211_sar_capa mt76_sar_capa = {
 	.num_freq_ranges = ARRAY_SIZE(mt76_sar_freq_ranges),
 	.freq_ranges = &mt76_sar_freq_ranges[0],
 };
+#endif
 
 static int mt76_led_init(struct mt76_dev *dev)
 {
@@ -433,11 +435,12 @@ mt76_phy_init(struct mt76_phy *phy, struct ieee80211_hw *hw)
 
 	wiphy->available_antennas_tx = phy->antenna_mask;
 	wiphy->available_antennas_rx = phy->antenna_mask;
-
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 	wiphy->sar_capa = &mt76_sar_capa;
 	phy->frp = devm_kcalloc(dev->dev, wiphy->sar_capa->num_freq_ranges,
 				sizeof(struct mt76_freq_range_power),
 				GFP_KERNEL);
+#endif
 	if (!phy->frp)
 		return -ENOMEM;
 
@@ -1423,6 +1426,7 @@ int mt76_get_txpower(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 }
 EXPORT_SYMBOL_GPL(mt76_get_txpower);
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 int mt76_init_sar_power(struct ieee80211_hw *hw,
 			const struct cfg80211_sar_specs *sar)
 {
@@ -1474,6 +1478,14 @@ int mt76_get_sar_power(struct mt76_phy *phy,
 
 	return power;
 }
+#else
+int mt76_get_sar_power(struct mt76_phy *phy,
+		       struct ieee80211_channel *chan,
+		       int power)
+{
+	return 127;
+}
+#endif
 EXPORT_SYMBOL_GPL(mt76_get_sar_power);
 
 static void

@@ -14,6 +14,7 @@
 #include <linux/usb.h>
 #include <linux/average.h>
 #include <net/mac80211.h>
+#include <linux/version.h>
 #include "util.h"
 #include "testmode.h"
 
@@ -586,10 +587,12 @@ struct mt76_rx_status {
 	s8 chain_signal[IEEE80211_MAX_CHAINS];
 };
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 struct mt76_freq_range_power {
 	const struct cfg80211_sar_freq_ranges *range;
 	s8 power;
 };
+#endif
 
 struct mt76_testmode_ops {
 	int (*set_state)(struct mt76_phy *phy, enum mt76_testmode_state state);
@@ -1188,12 +1191,13 @@ int mt76_get_min_avg_rssi(struct mt76_dev *dev, bool ext_phy);
 
 int mt76_get_txpower(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 		     int *dbm);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 int mt76_init_sar_power(struct ieee80211_hw *hw,
 			const struct cfg80211_sar_specs *sar);
+#endif
 int mt76_get_sar_power(struct mt76_phy *phy,
 		       struct ieee80211_channel *chan,
 		       int power);
-
 void mt76_csa_check(struct mt76_dev *dev);
 void mt76_csa_finish(struct mt76_dev *dev);
 
@@ -1431,5 +1435,9 @@ mt76_packet_id_flush(struct mt76_dev *dev, struct mt76_wcid *wcid)
 
 	idr_destroy(&wcid->pktid);
 }
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)	
+#define RX_FLAG_8023 BIT(30)
+#endif
 
 #endif

@@ -656,11 +656,12 @@ mt76_dma_init(struct mt76_dev *dev,
 	int i;
 
 	init_dummy_netdev(&dev->napi_dev);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 12, 0)
 	init_dummy_netdev(&dev->tx_napi_dev);
 	snprintf(dev->napi_dev.name, sizeof(dev->napi_dev.name), "%s",
 		 wiphy_name(dev->hw->wiphy));
 	dev->napi_dev.threaded = 1;
-
+#endif
 	mt76_for_each_q_rx(dev, i) {
 		netif_napi_add(&dev->napi_dev, &dev->napi[i], poll, 64);
 		mt76_dma_rx_fill(dev, &dev->q_rx[i]);

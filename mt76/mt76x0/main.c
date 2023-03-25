@@ -30,7 +30,7 @@ mt76x0_set_channel(struct mt76x02_dev *dev, struct cfg80211_chan_def *chandef)
 
 	mt76_txq_schedule_all(&dev->mphy);
 }
-
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
 int mt76x0_set_sar_specs(struct ieee80211_hw *hw,
 			 const struct cfg80211_sar_specs *sar)
 {
@@ -56,6 +56,7 @@ out:
 	return err;
 }
 EXPORT_SYMBOL_GPL(mt76x0_set_sar_specs);
+#endif
 
 int mt76x0_config(struct ieee80211_hw *hw, u32 changed)
 {
